@@ -195,6 +195,8 @@ function SoapCard({ soap, addToCart }) {
   const images = soap.images?.length ? soap.images : []
   const total = images.length
 
+  const [zoom, setZoom] = useState(false)
+
   const handleAdd = () => {
     addToCart(soap)
     setAdded(true)
@@ -206,7 +208,7 @@ function SoapCard({ soap, addToCart }) {
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.15)' }}
       onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)' }}>
       {/* Image Carousel */}
-      <div style={{ height: 220, background: '#e8f5e9', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ height: 220, background: '#e8f5e9', position: 'relative', overflow: 'hidden', cursor: 'pointer' }} onClick={() => images.length > 0 && setZoom(true)}>
         {total > 0 ? (
           <>
             <AutoImage src={images[current]} alt={soap.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -224,6 +226,21 @@ function SoapCard({ soap, addToCart }) {
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ fontSize: 60 }}>🧼</span></div>
         )}
       </div>
+
+      {/* Fullscreen Image Viewer */}
+      {zoom && (
+        <div onClick={() => setZoom(false)} style={{ position: 'fixed', inset: 0, zIndex: 5000, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out' }}>
+          <AutoImage src={images[current]} alt={soap.name} style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', borderRadius: 8 }} />
+          {total > 1 && (
+            <>
+              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c - 1 + total) % total) }} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}>‹</button>
+              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c + 1) % total) }} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}>›</button>
+            </>
+          )}
+          <button onClick={() => setZoom(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 24, width: 40, height: 40, borderRadius: '50%', cursor: 'pointer' }}>✕</button>
+        </div>
+      )}
+
       <div style={{ padding: '20px 24px' }}>
         <h3 style={{ color: '#2d5016', fontSize: 18, fontWeight: 600, margin: '0 0 8px' }}>{soap.name}</h3>
         <p style={{ color: '#666', fontSize: 14, margin: '0 0 4px', lineHeight: 1.5 }}>{soap.description}</p>
