@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx'
 const INSTAGRAM_URL = 'https://www.instagram.com/____vanam___?igsh=eHdnemxyNXAzeG1x'
 const WHATSAPP_NUMBER = '919176188117'
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzxfh9qZV-eMTdf68R1g8ymjASAQq3SIeqzcfAHWRDmJ3wDBf3Qm6n0KJ2WSxmHPR9/exec'
+const ORDER_TOKEN = 'VANAM2025SECURE'
 const FREE_SHIPPING_THRESHOLD = 499
 const SHIPPING_CHARGE = 50
 
@@ -399,6 +400,7 @@ function CheckoutModal({ cart, onClose, onSuccess }) {
     setSubmitting(true)
 
     const orderData = {
+      token: ORDER_TOKEN,
       orderId: orderId,
       date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
       name: form.name.trim(),

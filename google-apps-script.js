@@ -14,6 +14,8 @@
 
 const OWNER_EMAIL = 'vanamsoaps@gmail.com';
 const SHEET_NAME = 'Sheet1';
+const ORDER_TOKEN = 'VANAM2025SECURE';
+const MAX_ORDERS_PER_PHONE_PER_HOUR = 3;
 
 function doPost(e) {
   try {
@@ -25,6 +27,21 @@ function doPost(e) {
     } else {
       throw new Error('No data received');
     }
+
+    // Token verification
+    if (data.token !== ORDER_TOKEN) {
+      throw new Error('Unauthorized request');
+    }
+    delete data.token;
+
+    // Rate limiting by phone number
+    var cache = CacheService.getScriptCache();
+    var cacheKey = 'orders_' + data.phone;
+    var count = parseInt(cache.get(cacheKey) || '0');
+    if (count >= MAX_ORDERS_PER_PHONE_PER_HOUR) {
+      throw new Error('Too many orders. Please try again later.');
+    }
+    cache.put(cacheKey, String(count + 1), 3600);
 
     saveOrderAndNotify(data);
 
