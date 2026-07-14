@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import * as XLSX from 'xlsx'
 
 const INSTAGRAM_URL = 'https://www.instagram.com/____vanam___?igsh=eHdnemxyNXAzeG1x'
@@ -227,18 +228,19 @@ function SoapCard({ soap, addToCart }) {
         )}
       </div>
 
-      {/* Fullscreen Image Viewer */}
-      {zoom && (
-        <div onClick={() => setZoom(false)} style={{ position: 'fixed', inset: 0, zIndex: 5000, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out' }}>
+      {/* Fullscreen Image Viewer - using portal to render outside parent */}
+      {zoom && ReactDOM.createPortal(
+        <div onClick={() => setZoom(false)} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out' }}>
           <AutoImage src={images[current]} alt={soap.name} style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', borderRadius: 8 }} />
           {total > 1 && (
             <>
-              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c - 1 + total) % total) }} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}>‹</button>
-              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c + 1) % total) }} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}>›</button>
+              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c - 1 + total) % total) }} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 24, cursor: 'pointer' }}>‹</button>
+              <button onClick={e => { e.stopPropagation(); setCurrent(c => (c + 1) % total) }} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 24, cursor: 'pointer' }}>›</button>
             </>
           )}
-          <button onClick={() => setZoom(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 24, width: 40, height: 40, borderRadius: '50%', cursor: 'pointer' }}>✕</button>
-        </div>
+          <button onClick={() => setZoom(false)} style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff', fontSize: 28, width: 44, height: 44, borderRadius: '50%', cursor: 'pointer' }}>✕</button>
+        </div>,
+        document.body
       )}
 
       <div style={{ padding: '20px 24px' }}>
