@@ -166,6 +166,29 @@ function HomePage({ soaps, loading, addToCart }) {
   )
 }
 
+const IMG_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp']
+
+function resolveImageSrc(src) {
+  const base = src.replace(/\.[^.]+$/, '')
+  return { base, original: src }
+}
+
+function AutoImage({ src, alt, style }) {
+  const [currentSrc, setCurrentSrc] = useState(src)
+  const [extIdx, setExtIdx] = useState(0)
+  const base = src.replace(/\.[^.]+$/, '')
+
+  const handleError = () => {
+    const nextIdx = extIdx + 1
+    if (nextIdx < IMG_EXTENSIONS.length) {
+      setExtIdx(nextIdx)
+      setCurrentSrc(`${base}.${IMG_EXTENSIONS[nextIdx]}`)
+    }
+  }
+
+  return <img src={currentSrc} alt={alt} style={style} onError={handleError} />
+}
+
 function SoapCard({ soap, addToCart }) {
   const [current, setCurrent] = useState(0)
   const [added, setAdded] = useState(false)
@@ -186,7 +209,7 @@ function SoapCard({ soap, addToCart }) {
       <div style={{ height: 220, background: '#e8f5e9', position: 'relative', overflow: 'hidden' }}>
         {total > 0 ? (
           <>
-            <img src={images[current]} alt={soap.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none' }} />
+            <AutoImage src={images[current]} alt={soap.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             {total > 1 && (
               <>
                 <button onClick={() => setCurrent(c => (c - 1 + total) % total)} style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: 'none', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }}>‹</button>
@@ -257,7 +280,7 @@ function CartDrawer({ cart, updateQty, removeFromCart, onClose, onCheckout }) {
             cart.map((item, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: '1px solid #f0f0f0' }}>
                 <div style={{ width: 55, height: 55, borderRadius: 10, background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                  {item.images?.[0] ? <img src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '🧼' }} /> : '🧼'}
+                  {item.images?.[0] ? <AutoImage src={item.images[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '🧼'}
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: '#333' }}>{item.name}</p>
