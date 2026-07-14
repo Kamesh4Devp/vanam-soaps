@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /soaps.xlsx
+
+Sitemap: https://vanamsoaps.com/sitemap.xml
