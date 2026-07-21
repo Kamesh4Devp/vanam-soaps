@@ -1,10 +1,10 @@
 import XLSX from 'xlsx';
 
 const soaps = [
-  { name: 'Kuppameni Soap', description: 'Traditional herbal soap made with Kuppameni leaves for healthy skin', price: 120, weight: '100g', inStock: 'yes', image1: '/images/kuppameni1.jpg', image2: '/images/kuppameni2.jpg', image3: '/images/kuppameni3.jpg' },
-  { name: 'Papaya Soap', description: 'Skin brightening soap with natural papaya extract', price: 130, weight: '100g', inStock: 'yes', image1: '/images/papaya1.jpg', image2: '/images/papaya2.jpg', image3: '/images/papaya3.jpg' },
-  { name: 'Aloe Vera Soap', description: 'Moisturizing soap with fresh aloe vera gel', price: 110, weight: '100g', inStock: 'yes', image1: '/images/aloevera1.jpg', image2: '/images/aloevera2.jpg', image3: '/images/aloevera3.jpg' },
-  { name: 'Charcoal Soap', description: 'Deep cleansing activated charcoal soap for oil control', price: 140, weight: '100g', inStock: 'yes', image1: '/images/charcoal1.jpg', image2: '/images/charcoal2.jpg', image3: '/images/charcoal3.jpg' },
+  { name: 'Kuppameni Soap', description: 'Traditional herbal soap made with Kuppameni leaves for healthy skin', price100g: 100, price70g: 50, inStock100g: 'yes', inStock70g: 'yes', image1: '/images/kuppameni1.jpeg', image2: '/images/kuppameni2.jpeg', image3: '/images/kuppameni3.jpeg' },
+  { name: 'Papaya Soap', description: 'Skin brightening soap with natural papaya extract', price100g: 100, price70g: 50, inStock100g: 'yes', inStock70g: 'yes', image1: '/images/papaya1.jpeg', image2: '/images/papaya2.jpeg', image3: '/images/papaya3.jpeg' },
+  { name: 'Aloe Vera Soap', description: 'Moisturizing soap with fresh aloe vera gel', price100g: 100, price70g: 50, inStock100g: 'yes', inStock70g: 'yes', image1: '/images/aloevera1.jpeg', image2: '/images/aloevera2.jpeg', image3: '/images/aloevera3.jpeg' },
+  { name: 'Charcoal Soap', description: 'Deep cleansing activated charcoal soap for oil control', price100g: 100, price70g: 50, inStock100g: 'yes', inStock70g: 'yes', image1: '/images/charcoal1.jpeg', image2: '/images/charcoal2.jpeg', image3: '/images/charcoal3.jpeg' },
 ];
 
 const ws = XLSX.utils.json_to_sheet(soaps);

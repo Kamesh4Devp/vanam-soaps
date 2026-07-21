@@ -37,16 +37,24 @@ export default function App() {
           for (let k = 1; k <= 10; k++) {
             if (row[`image${k}`]) images.push(row[`image${k}`])
           }
-          return { name: row.name, description: row.description, price: row.price, weight: row.weight || '', inStock: row.inStock !== 'no', images }
+          return {
+            name: row.name,
+            description: row.description,
+            price100g: row.price100g,
+            price70g: row.price70g,
+            inStock100g: row.inStock100g !== 'no',
+            inStock70g: row.inStock70g !== 'no',
+            images
+          }
         })
         setSoaps(parsed)
       })
       .catch(() => {
         setSoaps([
-          { name: 'Kuppameni Soap', description: 'Traditional herbal soap made with Kuppameni leaves', price: 120, weight: '100g', inStock: true, images: ['/images/kuppameni1.jpg', '/images/kuppameni2.jpg', '/images/kuppameni3.jpg'] },
-          { name: 'Papaya Soap', description: 'Skin brightening soap with natural papaya extract', price: 130, weight: '100g', inStock: true, images: ['/images/papaya1.jpg', '/images/papaya2.jpg', '/images/papaya3.jpg'] },
-          { name: 'Aloe Vera Soap', description: 'Moisturizing soap with fresh aloe vera gel', price: 110, weight: '100g', inStock: true, images: ['/images/aloevera1.jpg', '/images/aloevera2.jpg', '/images/aloevera3.jpg'] },
-          { name: 'Charcoal Soap', description: 'Deep cleansing activated charcoal soap', price: 140, weight: '100g', inStock: true, images: ['/images/charcoal1.jpg', '/images/charcoal2.jpg', '/images/charcoal3.jpg'] },
+          { name: 'Kuppameni Soap', description: 'Traditional herbal soap made with Kuppameni leaves', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/kuppameni1.jpeg', '/images/kuppameni2.jpeg', '/images/kuppameni3.jpeg'] },
+          { name: 'Papaya Soap', description: 'Skin brightening soap with natural papaya extract', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/papaya1.jpeg', '/images/papaya2.jpeg', '/images/papaya3.jpeg'] },
+          { name: 'Aloe Vera Soap', description: 'Moisturizing soap with fresh aloe vera gel', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/aloevera1.jpeg', '/images/aloevera2.jpeg', '/images/aloevera3.jpeg'] },
+          { name: 'Charcoal Soap', description: 'Deep cleansing activated charcoal soap', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/charcoal1.jpeg', '/images/charcoal2.jpeg', '/images/charcoal3.jpeg'] },
         ])
       })
       .finally(() => setLoading(false))
@@ -194,13 +202,20 @@ function AutoImage({ src, alt, style }) {
 function SoapCard({ soap, addToCart }) {
   const [current, setCurrent] = useState(0)
   const [added, setAdded] = useState(false)
+  const [zoom, setZoom] = useState(false)
+
+  const weights = []
+  if (soap.inStock70g) weights.push({ label: '70g', price: soap.price70g })
+  if (soap.inStock100g) weights.push({ label: '100g', price: soap.price100g })
+
+  const [selectedWeight, setSelectedWeight] = useState(weights[0] || null)
+
   const images = soap.images?.length ? soap.images : []
   const total = images.length
 
-  const [zoom, setZoom] = useState(false)
-
   const handleAdd = () => {
-    addToCart(soap)
+    if (!selectedWeight) return
+    addToCart({ ...soap, price: selectedWeight.price, weight: selectedWeight.label })
     setAdded(true)
     setTimeout(() => setAdded(false), 1000)
   }
@@ -246,19 +261,27 @@ function SoapCard({ soap, addToCart }) {
 
       <div style={{ padding: '20px 24px' }}>
         <h3 style={{ color: '#2d5016', fontSize: 18, fontWeight: 600, margin: '0 0 8px' }}>{soap.name}</h3>
-        <p style={{ color: '#666', fontSize: 14, margin: '0 0 4px', lineHeight: 1.5 }}>{soap.description}</p>
-        {soap.weight && <p style={{ color: '#888', fontSize: 12, margin: '0 0 12px' }}>Net Wt: {soap.weight}</p>}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          {soap.price && <span style={{ color: '#2d5016', fontSize: 18, fontWeight: 700 }}>₹{getPrice(soap.price)}</span>}
-          {soap.inStock === false ? (
-            <span style={{ color: '#e53e3e', fontSize: 13, fontWeight: 600, padding: '10px 18px' }}>Out of Stock</span>
-          ) : (
-            <button onClick={handleAdd}
-              style={{ background: added ? '#16a34a' : '#2d5016', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.3s' }}>
-              {added ? '✓ Added' : '🛒 Add to Cart'}
-            </button>
-          )}
-        </div>
+        <p style={{ color: '#666', fontSize: 14, margin: '0 0 12px', lineHeight: 1.5 }}>{soap.description}</p>
+
+        {weights.length > 0 ? (
+          <>
+            <select
+              value={selectedWeight?.label || ''}
+              onChange={e => setSelectedWeight(weights.find(w => w.label === e.target.value))}
+              style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #ddd', fontSize: 14, marginBottom: 12, fontFamily: 'inherit', color: '#333', background: '#f9f9f9', cursor: 'pointer' }}>
+              {weights.map(w => <option key={w.label} value={w.label}>{w.label} — ₹{w.price}</option>)}
+            </select>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: '#2d5016', fontSize: 18, fontWeight: 700 }}>₹{selectedWeight?.price}</span>
+              <button onClick={handleAdd}
+                style={{ background: added ? '#16a34a' : '#2d5016', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.3s' }}>
+                {added ? '✓ Added' : '🛒 Add to Cart'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <span style={{ color: '#e53e3e', fontSize: 13, fontWeight: 600 }}>Out of Stock</span>
+        )}
       </div>
     </div>
   )
