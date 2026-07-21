@@ -55,6 +55,7 @@ export default function App() {
           { name: 'Papaya Soap', description: 'Skin brightening soap with natural papaya extract', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/papaya1.jpeg', '/images/papaya2.jpeg', '/images/papaya3.jpeg'] },
           { name: 'Aloe Vera Soap', description: 'Moisturizing soap with fresh aloe vera gel', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/aloevera1.jpeg', '/images/aloevera2.jpeg', '/images/aloevera3.jpeg'] },
           { name: 'Charcoal Soap', description: 'Deep cleansing activated charcoal soap', price100g: 100, price70g: 50, inStock100g: true, inStock70g: true, images: ['/images/charcoal1.jpeg', '/images/charcoal2.jpeg', '/images/charcoal3.jpeg'] },
+          { name: 'Acne Clear Soap', description: 'Powerful acne-fighting soap with Aloe Vera, Papaya, Shea Butter, Neem & Kasturi Turmeric', price100g: 120, price70g: 100, inStock100g: true, inStock70g: true, images: ['/images/acnesoap1.jpeg', '/images/acnesoap2.jpeg', '/images/acnesoap3.jpeg'] },
         ])
       })
       .finally(() => setLoading(false))
